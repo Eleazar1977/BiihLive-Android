@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Google G Logo -->
+    <group>
+        <!-- Blue part -->
+        <path
+            android:pathData="M22.56,12.25C22.56,11.47 22.49,10.72 22.36,10L12,10L12,14.26L17.92,14.26C17.66,15.63 16.91,16.78 15.81,17.54L15.81,20.33L19.33,20.33C21.36,18.46 22.56,15.6 22.56,12.25Z"
+            android:fillColor="#4285F4"/>
+
+        <!-- Green part -->
+        <path
+            android:pathData="M12,23C15.24,23 17.95,21.91 19.33,20.33L15.81,17.54C14.76,18.33 13.38,18.81 12,18.81C8.88,18.81 6.24,16.92 5.27,14.27L1.64,14.27L1.64,17.17C3.01,19.88 7.26,23 12,23Z"
+            android:fillColor="#34A853"/>
+
+        <!-- Yellow part -->
+        <path
+            android:pathData="M5.27,14.27C4.95,13.48 4.76,12.62 4.76,11.73C4.76,10.84 4.95,9.98 5.27,9.19L5.27,6.29L1.64,6.29C0.59,8.38 0,10.49 0,11.73C0,12.97 0.59,15.08 1.64,17.17L5.27,14.27Z"
+            android:fillColor="#FBBC04"/>
+
+        <!-- Red part -->
+        <path
+            android:pathData="M12,4.92C13.5,4.92 14.85,5.46 15.92,6.45L18.96,3.41C17.94,2.47 15.23,1 12,1C7.26,1 3.01,4.12 1.64,6.29L5.27,9.19C6.24,6.54 8.88,4.92 12,4.92Z"
+            android:fillColor="#EA4335"/>
+    </group>
+</vector>

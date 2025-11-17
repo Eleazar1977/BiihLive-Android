@@ -1,0 +1,376 @@
+# this is an auto generated file. This will be overwritten
+
+mutation UpdateProfile(
+  $userId: ID!
+  $nickname: String
+  $description: String
+  $photoUrl: String
+) {
+  updateProfile(
+    userId: $userId
+    nickname: $nickname
+    description: $description
+    photoUrl: $photoUrl
+  ) {
+    userId
+    nickname
+    fullName
+    description
+    totalScore
+    nivel
+    tipo
+    ubicacion {
+      ciudad
+      provincia
+      pais
+      __typename
+    }
+    rankingPreference
+    createdAt
+    photoUrl
+    email
+    followersCount
+    followingCount
+    isOnline
+    lastSeen
+    updatedAt
+    followers {
+      nextToken
+      __typename
+    }
+    following {
+      nextToken
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation FollowUser($userId: ID!, $targetUserId: ID!) {
+  followUser(userId: $userId, targetUserId: $targetUserId) {
+    id
+    userId
+    targetUserId
+    relationType
+    createdAt
+    status
+    updatedAt
+    __typename
+  }
+}
+
+mutation UnfollowUser($userId: ID!, $targetUserId: ID!) {
+  unfollowUser(userId: $userId, targetUserId: $targetUserId)
+}
+
+mutation CreatePerfilUsuario(
+  $input: CreatePerfilUsuarioInput!
+  $condition: ModelPerfilUsuarioConditionInput
+) {
+  createPerfilUsuario(input: $input, condition: $condition) {
+    userId
+    nickname
+    fullName
+    description
+    totalScore
+    nivel
+    tipo
+    ubicacion {
+      ciudad
+      provincia
+      pais
+      __typename
+    }
+    rankingPreference
+    createdAt
+    photoUrl
+    email
+    followersCount
+    followingCount
+    isOnline
+    lastSeen
+    updatedAt
+    followers {
+      nextToken
+      __typename
+    }
+    following {
+      nextToken
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation UpdatePerfilUsuario(
+  $input: UpdatePerfilUsuarioInput!
+  $condition: ModelPerfilUsuarioConditionInput
+) {
+  updatePerfilUsuario(input: $input, condition: $condition) {
+    userId
+    nickname
+    fullName
+    description
+    totalScore
+    nivel
+    tipo
+    ubicacion {
+      ciudad
+      provincia
+      pais
+      __typename
+    }
+    rankingPreference
+    createdAt
+    photoUrl
+    email
+    followersCount
+    followingCount
+    isOnline
+    lastSeen
+    updatedAt
+    followers {
+      nextToken
+      __typename
+    }
+    following {
+      nextToken
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation DeletePerfilUsuario(
+  $input: DeletePerfilUsuarioInput!
+  $condition: ModelPerfilUsuarioConditionInput
+) {
+  deletePerfilUsuario(input: $input, condition: $condition) {
+    userId
+    nickname
+    fullName
+    description
+    totalScore
+    nivel
+    tipo
+    ubicacion {
+      ciudad
+      provincia
+      pais
+      __typename
+    }
+    rankingPreference
+    createdAt
+    photoUrl
+    email
+    followersCount
+    followingCount
+    isOnline
+    lastSeen
+    updatedAt
+    followers {
+      nextToken
+      __typename
+    }
+    following {
+      nextToken
+      __typename
+    }
+    __typename
+  }
+}
+
+mutation CreateSocialRelation(
+  $input: CreateSocialRelationInput!
+  $condition: ModelSocialRelationConditionInput
+) {
+  createSocialRelation(input: $input, condition: $condition) {
+    id
+    userId
+    targetUserId
+    relationType
+    createdAt
+    status
+    updatedAt
+    __typename
+  }
+}
+
+mutation UpdateSocialRelation(
+  $input: UpdateSocialRelationInput!
+  $condition: ModelSocialRelationConditionInput
+) {
+  updateSocialRelation(input: $input, condition: $condition) {
+    id
+    userId
+    targetUserId
+    relationType
+    createdAt
+    status
+    updatedAt
+    __typename
+  }
+}
+
+mutation DeleteSocialRelation(
+  $input: DeleteSocialRelationInput!
+  $condition: ModelSocialRelationConditionInput
+) {
+  deleteSocialRelation(input: $input, condition: $condition) {
+    id
+    userId
+    targetUserId
+    relationType
+    createdAt
+    status
+    updatedAt
+    __typename
+  }
+}
+
+mutation CreateChat(
+  $input: CreateChatInput!
+  $condition: ModelChatConditionInput
+) {
+  createChat(input: $input, condition: $condition) {
+    id
+    participants
+    lastMessage
+    lastMessageTime
+    unreadCount
+    messages {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+mutation UpdateChat(
+  $input: UpdateChatInput!
+  $condition: ModelChatConditionInput
+) {
+  updateChat(input: $input, condition: $condition) {
+    id
+    participants
+    lastMessage
+    lastMessageTime
+    unreadCount
+    messages {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+mutation DeleteChat(
+  $input: DeleteChatInput!
+  $condition: ModelChatConditionInput
+) {
+  deleteChat(input: $input, condition: $condition) {
+    id
+    participants
+    lastMessage
+    lastMessageTime
+    unreadCount
+    messages {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+mutation CreateMessage(
+  $input: CreateMessageInput!
+  $condition: ModelMessageConditionInput
+) {
+  createMessage(input: $input, condition: $condition) {
+    id
+    chatId
+    chat {
+      id
+      participants
+      lastMessage
+      lastMessageTime
+      unreadCount
+      createdAt
+      updatedAt
+      __typename
+    }
+    senderId
+    senderName
+    content
+    messageType
+    status
+    readBy
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+mutation UpdateMessage(
+  $input: UpdateMessageInput!
+  $condition: ModelMessageConditionInput
+) {
+  updateMessage(input: $input, condition: $condition) {
+    id
+    chatId
+    chat {
+      id
+      participants
+      lastMessage
+      lastMessageTime
+      unreadCount
+      createdAt
+      updatedAt
+      __typename
+    }
+    senderId
+    senderName
+    content
+    messageType
+    status
+    readBy
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+mutation DeleteMessage(
+  $input: DeleteMessageInput!
+  $condition: ModelMessageConditionInput
+) {
+  deleteMessage(input: $input, condition: $condition) {
+    id
+    chatId
+    chat {
+      id
+      participants
+      lastMessage
+      lastMessageTime
+      unreadCount
+      createdAt
+      updatedAt
+      __typename
+    }
+    senderId
+    senderName
+    content
+    messageType
+    status
+    readBy
+    createdAt
+    updatedAt
+    __typename
+  }
+}

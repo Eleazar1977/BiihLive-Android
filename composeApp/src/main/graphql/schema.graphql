@@ -1,0 +1,155 @@
+# Schema AppSync para Biihlive - ESQUEMA FUSIONADO
+# Optimizado para tablas DynamoDB existentes y funcionalidades de chat/social
+
+type PerfilUsuario @model @auth(rules: [{ allow: owner, ownerField: "userId" }]) {
+    userId: ID!  # Cognito Sub - PK
+    nickname: String!
+    fullName: String
+    description: String
+    totalScore: Int!
+    nivel: Int!
+    tipo: String
+    ubicacion: Ubicacion
+    rankingPreference: String
+    createdAt: AWSTimestamp!
+    photoUrl: String
+    email: String
+    followersCount: Int
+    followingCount: Int
+    # Campos adicionales de 'User' del plan maestro si son necesarios y no están cubiertos
+    cognitoId: String @index(name: "byCognitoId", queryField: "getUserByCognitoId") # Para buscar por Cognito ID
+    isOnline: Boolean
+    lastSeen: AWSDateTime
+    updatedAt: AWSTimestamp!
+}
+
+type Ubicacion {
+    ciudad: String
+    provincia: String
+    pais: String
+}
+
+type SocialRelation @model @auth(rules: [{ allow: owner, ownerField: "userId" }]) {
+    id: ID! # PK para SocialRelation
+    userId: ID! # Quien sigue o es seguido
+    targetUserId: ID! # A quien se sigue o quien sigue
+    relationType: String! # "FOLLOWING" o "FOLLOWER"
+    createdAt: AWSTimestamp!
+    status: String # Por ejemplo, "ACTIVE"
+    userProfile: PerfilUsuario @belongsTo(fields: ["targetUserId"]) # Relación con el perfil del usuario objetivo
+}
+
+type SocialConnection {
+    items: [SocialRelation!]!
+    nextToken: String
+    totalCount: Int
+}
+
+type Chat @model @auth(rules: [{ allow: owner, ownerField: "participants" }]) {
+    id: ID!
+    participants: [String!]!
+    participantUsers: [PerfilUsuario] @manyToMany(relationName: "ChatUsers") # Relación con PerfilUsuario
+    lastMessage: String
+    lastMessageTime: AWSDateTime
+    unreadCount: AWSJSON # Puede ser un mapa de userId a count
+    messages: [Message] @hasMany(indexName: "byChat", fields: ["id"])
+    createdAt: AWSTimestamp!
+    updatedAt: AWSTimestamp!
+}
+
+type Message @model @auth(rules: [{ allow: owner, ownerField: "senderId" }]) {
+    id: ID!
+    chatId: ID! @index(name: "byChat", sortKeyFields: ["createdAt"], queryField: "messagesByChat")
+    chat: Chat @belongsTo(fields: ["chatId"])
+    senderId: String!
+    senderName: String!
+    content: String!
+    messageType: MessageType!
+    status: MessageStatus!
+    readBy: [String!]
+    createdAt: AWSTimestamp!
+    updatedAt: AWSTimestamp!
+}
+
+enum MessageType {
+    TEXT
+    IMAGE
+    VIDEO
+    AUDIO
+    FILE
+}
+
+enum MessageStatus {
+    SENDING
+    SENT
+    DELIVERED
+    READ
+    FAILED
+}
+
+type Query {
+    getPerfilUsuario(userId: ID!): PerfilUsuario
+    getMyProfile: PerfilUsuario
+    getUserFollowers(userId: ID!, limit: Int, nextToken: String): SocialConnection
+    getUserFollowing(userId: ID!, limit: Int, nextToken: String): SocialConnection
+    isFollowing(targetUserId: ID!): Boolean
+    getMyChats: [Chat!]!
+    getChatMessages(chatId: ID!, limit: Int, nextToken: String): MessageConnection
+    getUserByCognitoId(cognitoId: String!): PerfilUsuario @aws_api_key # Query para buscar por Cognito ID
+}
+
+type Mutation {
+    updatePerfilUsuario(
+        userId: ID!
+        nickname: String
+        description: String
+        photoUrl: String
+        totalScore: Int
+        nivel: Int
+        tipo: String
+        ubicacion: UbicacionInput
+        rankingPreference: String
+        email: String
+        followersCount: Int
+        followingCount: Int
+        isOnline: Boolean
+        lastSeen: AWSDateTime
+    ): PerfilUsuario
+
+    followUser(userId: ID!, targetUserId: ID!): SocialRelation # userId es quien sigue, targetUserId es a quien se sigue
+    unfollowUser(userId: ID!, targetUserId: ID!): Boolean
+
+    createOrUpdateChat(
+        chatId: ID!
+        participants: [String!]!
+    ): Chat
+
+    sendMessage(
+        chatId: ID!
+        content: String!
+        messageType: MessageType!
+    ): Message
+}
+
+type Subscription {
+    onNewMessage(chatId: ID!): Message @aws_subscribe(mutations: ["sendMessage"])
+    onChatUpdate(chatId: ID!): Chat @aws_subscribe(mutations: ["createOrUpdateChat"])
+    onUpdatePerfilUsuario(userId: ID!): PerfilUsuario @aws_subscribe(mutations: ["updatePerfilUsuario"])
+}
+
+type MessageConnection {
+    items: [Message!]!
+    nextToken: String
+}
+
+input UbicacionInput {
+    ciudad: String
+    provincia: String
+    pais: String
+}
+
+schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+}

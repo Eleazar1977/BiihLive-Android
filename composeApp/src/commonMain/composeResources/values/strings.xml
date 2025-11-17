@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Biihlive</string>
+    
+    <!-- Navigation -->
+    <string name="home">Inicio</string>
+    <string name="events">Eventos</string>
+    <string name="live">En Vivo</string>
+    <string name="messages">Mensajes</string>
+    <string name="profile">Perfil</string>
+    
+    <!-- Authentication -->
+    <string name="welcome">Bienvenido</string>
+    <string name="sign_in">Iniciar Sesión</string>
+    <string name="sign_out">Cerrar Sesión</string>
+    <string name="signing_in">Iniciando sesión...</string>
+    <string name="sign_in_with_google">Iniciar sesión con Google</string>
+    <string name="sign_in_with_email">Iniciar sesión con correo</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    
+    <!-- Profile -->
+    <string name="edit_profile">Editar Perfil</string>
+    <string name="user_profile">Perfil de Usuario</string>
+    <string name="username">Nombre de usuario</string>
+    <string name="save_changes">Guardar Cambios</string>
+    <string name="cancel">Cancelar</string>
+    
+    <!-- Settings -->
+    <string name="settings">Configuración</string>
+    <string name="language">Idioma</string>
+    <string name="spanish">Español</string>
+    <string name="english">English</string>
+    <string name="notifications">Notificaciones</string>
+    <string name="privacy">Privacidad</string>
+    <string name="terms_of_service">Términos de Servicio</string>
+    <string name="about">Acerca de</string>
+    <string name="version">Versión</string>
+    
+    <!-- Dialogs -->
+    <string name="confirm">Confirmar</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="ok">Aceptar</string>
+    <string name="exit_confirmation_title">¿Salir de la aplicación?</string>
+    <string name="exit_confirmation_message">¿Estás seguro de que deseas salir?</string>
+    <string name="logout_confirmation_title">Cerrar Sesión</string>
+    <string name="logout_confirmation_message">¿Estás seguro de que deseas cerrar sesión?</string>
+    <string name="update_available_title">Actualización Disponible</string>
+    <string name="update_available_message">Hay una nueva versión disponible. ¿Deseas actualizar ahora?</string>
+    <string name="update_now">Actualizar Ahora</string>
+    <string name="later">Más Tarde</string>
+    
+    <!-- Errors -->
+    <string name="error_generic">Ha ocurrido un error</string>
+    <string name="error_network">Error de conexión</string>
+    <string name="error_authentication">Error de autenticación</string>
+    <string name="error_invalid_credentials">Credenciales inválidas</string>
+    <string name="try_again">Intentar de nuevo</string>
+    
+    <!-- Success Messages -->
+    <string name="success_profile_updated">Perfil actualizado exitosamente</string>
+    <string name="success_logout">Sesión cerrada exitosamente</string>
+    
+    <!-- Loading States -->
+    <string name="loading">Cargando...</string>
+    <string name="loading_profile">Cargando perfil...</string>
+    <string name="loading_content">Cargando contenido...</string>
+    
+    <!-- Empty States -->
+    <string name="no_content">No hay contenido disponible</string>
+    <string name="no_messages">No hay mensajes</string>
+    <string name="no_events">No hay eventos</string>
+    
+    <!-- Actions -->
+    <string name="refresh">Actualizar</string>
+    <string name="share">Compartir</string>
+    <string name="delete">Eliminar</string>
+    <string name="edit">Editar</string>
+    <string name="view_more">Ver más</string>
+    <string name="view_less">Ver menos</string>
+</resources>

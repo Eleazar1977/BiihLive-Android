@@ -1,0 +1,55 @@
+type PerfilUsuario {
+  userId: ID!
+  nickname: String
+  fullName: String
+  description: String
+  totalScore: Int
+  nivel: Int
+  tipo: String
+  ubicacion: Ubicacion
+  rankingPreference: String
+  createdAt: String
+  photoUrl: String
+  email: String
+  seguidores: Int
+  siguiendo: Int
+}
+
+type Ubicacion {
+  ciudad: String
+  provincia: String
+  pais: String
+}
+
+type Query {
+  getMyProfile: PerfilUsuario
+  getPerfilUsuario(userId: ID!): PerfilUsuario
+  getAllPerfiles: [PerfilUsuario]
+}
+
+type Mutation {
+  updateProfile(
+    userId: ID!
+    nickname: String
+    fullName: String
+    description: String
+    tipo: String
+    ubicacion: UbicacionInput
+    rankingPreference: String
+    photoUrl: String
+  ): PerfilUsuario
+
+  updateDescription(description: String!): PerfilUsuario
+  updateNickname(nickname: String!): PerfilUsuario
+}
+
+input UbicacionInput {
+  ciudad: String
+  provincia: String
+  pais: String
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}

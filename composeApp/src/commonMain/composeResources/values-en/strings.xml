@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Biihlive</string>
+    
+    <!-- Navigation -->
+    <string name="home">Home</string>
+    <string name="events">Events</string>
+    <string name="live">Live</string>
+    <string name="messages">Messages</string>
+    <string name="profile">Profile</string>
+    
+    <!-- Authentication -->
+    <string name="welcome">Welcome</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="signing_in">Signing in...</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_in_with_email">Sign in with email</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot your password?</string>
+    
+    <!-- Profile -->
+    <string name="edit_profile">Edit Profile</string>
+    <string name="user_profile">User Profile</string>
+    <string name="username">Username</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="cancel">Cancel</string>
+    
+    <!-- Settings -->
+    <string name="settings">Settings</string>
+    <string name="language">Language</string>
+    <string name="spanish">Español</string>
+    <string name="english">English</string>
+    <string name="notifications">Notifications</string>
+    <string name="privacy">Privacy</string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="about">About</string>
+    <string name="version">Version</string>
+    
+    <!-- Dialogs -->
+    <string name="confirm">Confirm</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+    <string name="exit_confirmation_title">Exit Application?</string>
+    <string name="exit_confirmation_message">Are you sure you want to exit?</string>
+    <string name="logout_confirmation_title">Sign Out</string>
+    <string name="logout_confirmation_message">Are you sure you want to sign out?</string>
+    <string name="update_available_title">Update Available</string>
+    <string name="update_available_message">A new version is available. Do you want to update now?</string>
+    <string name="update_now">Update Now</string>
+    <string name="later">Later</string>
+    
+    <!-- Errors -->
+    <string name="error_generic">An error occurred</string>
+    <string name="error_network">Connection error</string>
+    <string name="error_authentication">Authentication error</string>
+    <string name="error_invalid_credentials">Invalid credentials</string>
+    <string name="try_again">Try Again</string>
+    
+    <!-- Success Messages -->
+    <string name="success_profile_updated">Profile updated successfully</string>
+    <string name="success_logout">Signed out successfully</string>
+    
+    <!-- Loading States -->
+    <string name="loading">Loading...</string>
+    <string name="loading_profile">Loading profile...</string>
+    <string name="loading_content">Loading content...</string>
+    
+    <!-- Empty States -->
+    <string name="no_content">No content available</string>
+    <string name="no_messages">No messages</string>
+    <string name="no_events">No events</string>
+    
+    <!-- Actions -->
+    <string name="refresh">Refresh</string>
+    <string name="share">Share</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="view_more">View more</string>
+    <string name="view_less">View less</string>
+</resources>

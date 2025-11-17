@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "120126687425",
+    "project_id": "biihlive-aa5c3",
+    "storage_bucket": "biihlive-aa5c3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120126687425:android:7a9bb61f7bd98743e36c40",
+        "android_client_info": {
+          "package_name": "com.mision.biihlive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "120126687425-l11gmt4l7ssse8rb85qi161hlb7alogj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mision.biihlive",
+            "certificate_hash": "afcc3426d3e1171c7bb39c7db2764f023bc6345f"
+          }
+        },
+        {
+          "client_id": "120126687425-n296epqsc1kd8741fes9ppkkgc4jj8oi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCP55xxXT2LYQ3sDRtA5S7ZMIGvpUpr7vY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "120126687425-n296epqsc1kd8741fes9ppkkgc4jj8oi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

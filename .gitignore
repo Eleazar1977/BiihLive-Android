@@ -1,0 +1,89 @@
+# Android Studio Files
+*.iml
+.kotlin
+.gradle
+**/build/
+xcuserdata
+!src/**/build/
+local.properties
+.idea
+.DS_Store
+captures
+.externalNativeBuild
+.cxx
+
+# Xcode Files
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+**/xcshareddata/WorkspaceSettings.xcsettings
+
+# ===== ARCHIVOS SENSIBLES Y TEMPORALES =====
+
+# Firebase Service Account Keys (CRÍTICO PARA SEGURIDAD)
+*-firebase-adminsdk-*.json
+*.json
+!google-services.json
+!firebase.json
+!firestore.indexes.json
+!package.json
+
+# Scripts de Migración y Testing (Desarrollo)
+migrate_*.py
+test_*.py
+check_*.py
+verify_*.py
+investigate_*.py
+normalize_*.py
+ejemplo_*.py
+upload_*.py
+firebase_cli_migration.bat
+# !gradlew.bat  # Gradle wrapper is essential
+
+# Documentación Temporal de Desarrollo
+FASE1_*.md
+PLAN_*.md
+*-implementation.md
+*_BACKUP.md
+*_PROPOSAL.md
+*_GUIDE.md
+*_INSTRUCTIONS.md
+*_SOLUTION.md
+*_SUMMARY.md
+*_COMPLETADO.md
+*_SISTEMA.md
+RESUMEN_*.md
+COMPARISON_*.md
+SUBSCRIPTION_*.md
+GALLERY_*.md
+IMMUTABLE_*.md
+PROFILE-*.md
+PROYECTOBASE_*.md
+manual_*.md
+create_*.md
+issue-*.md
+fotos-*.md
+registro-*.md
+
+# Archivos de Upload y Reports
+upload_report_*.json
+table-definition-*.json
+update-s3-policy*.json
+
+# Scripts y Archivos JS/KT de Desarrollo
+check_*.js
+populate_*.js
+verify_*.js
+migrate_*.kt
+
+# Configuración Local
+.env
+.env.local
+.env.yaml
+
+# Logs y Temporales
+*.log
+*.tmp
+*.temp

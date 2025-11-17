@@ -1,0 +1,365 @@
+# this is an auto generated file. This will be overwritten
+
+query GetMyProfile {
+  getMyProfile {
+    userId
+    nickname
+    fullName
+    description
+    totalScore
+    nivel
+    tipo
+    ubicacion {
+      ciudad
+      provincia
+      pais
+      __typename
+    }
+    rankingPreference
+    createdAt
+    photoUrl
+    email
+    followersCount
+    followingCount
+    isOnline
+    lastSeen
+    updatedAt
+    followers {
+      nextToken
+      __typename
+    }
+    following {
+      nextToken
+      __typename
+    }
+    __typename
+  }
+}
+
+query GetUserFollowers($userId: ID!, $limit: Int, $nextToken: String) {
+  getUserFollowers(userId: $userId, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      userId
+      targetUserId
+      relationType
+      createdAt
+      status
+      updatedAt
+      __typename
+    }
+    nextToken
+    totalCount
+    __typename
+  }
+}
+
+query GetUserFollowing($userId: ID!, $limit: Int, $nextToken: String) {
+  getUserFollowing(userId: $userId, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      userId
+      targetUserId
+      relationType
+      createdAt
+      status
+      updatedAt
+      __typename
+    }
+    nextToken
+    totalCount
+    __typename
+  }
+}
+
+query GetPerfilUsuario($userId: ID!) {
+  getPerfilUsuario(userId: $userId) {
+    userId
+    nickname
+    fullName
+    description
+    totalScore
+    nivel
+    tipo
+    ubicacion {
+      ciudad
+      provincia
+      pais
+      __typename
+    }
+    rankingPreference
+    createdAt
+    photoUrl
+    email
+    followersCount
+    followingCount
+    isOnline
+    lastSeen
+    updatedAt
+    followers {
+      nextToken
+      __typename
+    }
+    following {
+      nextToken
+      __typename
+    }
+    __typename
+  }
+}
+
+query ListPerfilUsuarios(
+  $userId: ID
+  $filter: ModelPerfilUsuarioFilterInput
+  $limit: Int
+  $nextToken: String
+  $sortDirection: ModelSortDirection
+) {
+  listPerfilUsuarios(
+    userId: $userId
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+    sortDirection: $sortDirection
+  ) {
+    items {
+      userId
+      nickname
+      fullName
+      description
+      totalScore
+      nivel
+      tipo
+      rankingPreference
+      createdAt
+      photoUrl
+      email
+      followersCount
+      followingCount
+      isOnline
+      lastSeen
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+
+query GetSocialRelation($id: ID!) {
+  getSocialRelation(id: $id) {
+    id
+    userId
+    targetUserId
+    relationType
+    createdAt
+    status
+    updatedAt
+    __typename
+  }
+}
+
+query ListSocialRelations(
+  $filter: ModelSocialRelationFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listSocialRelations(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      userId
+      targetUserId
+      relationType
+      createdAt
+      status
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+
+query GetChat($id: ID!) {
+  getChat(id: $id) {
+    id
+    participants
+    lastMessage
+    lastMessageTime
+    unreadCount
+    messages {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+query ListChats(
+  $filter: ModelChatFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listChats(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      participants
+      lastMessage
+      lastMessageTime
+      unreadCount
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+
+query GetMessage($id: ID!) {
+  getMessage(id: $id) {
+    id
+    chatId
+    chat {
+      id
+      participants
+      lastMessage
+      lastMessageTime
+      unreadCount
+      createdAt
+      updatedAt
+      __typename
+    }
+    senderId
+    senderName
+    content
+    messageType
+    status
+    readBy
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+query ListMessages(
+  $filter: ModelMessageFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      chatId
+      senderId
+      senderName
+      content
+      messageType
+      status
+      readBy
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+
+query SocialRelationsByUserIdAndCreatedAt(
+  $userId: ID!
+  $createdAt: ModelStringKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelSocialRelationFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  socialRelationsByUserIdAndCreatedAt(
+    userId: $userId
+    createdAt: $createdAt
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      userId
+      targetUserId
+      relationType
+      createdAt
+      status
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+
+query SocialRelationsByTargetUserIdAndCreatedAt(
+  $targetUserId: ID!
+  $createdAt: ModelStringKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelSocialRelationFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  socialRelationsByTargetUserIdAndCreatedAt(
+    targetUserId: $targetUserId
+    createdAt: $createdAt
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      userId
+      targetUserId
+      relationType
+      createdAt
+      status
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+
+query MessagesByChatIdAndCreatedAt(
+  $chatId: ID!
+  $createdAt: ModelStringKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelMessageFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  messagesByChatIdAndCreatedAt(
+    chatId: $chatId
+    createdAt: $createdAt
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      chatId
+      senderId
+      senderName
+      content
+      messageType
+      status
+      readBy
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}

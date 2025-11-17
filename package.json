@@ -1,0 +1,16 @@
+{
+  "name": "biihlive-firebase-scripts",
+  "version": "1.0.0",
+  "description": "Scripts de migración y utilidades para BiihLive Firebase",
+  "scripts": {
+    "populate-subscriptions": "node populate_subscription_config.js --execute",
+    "preview-subscriptions": "node populate_subscription_config.js",
+    "verify-subscriptions": "node verify_subscription_config.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  },
+  "devDependencies": {},
+  "keywords": ["firebase", "migration", "bihlive"],
+  "author": "BiihLive Team"
+}

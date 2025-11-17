@@ -1,0 +1,13 @@
+﻿CLOUDFRONT CONFIGURATION FOR BIIHLIVE
+=====================================
+
+Distribution ID: E1HZ8WQ7IXAQXD
+Domain Name: d183hg75gdabnr.cloudfront.net
+Status: Deployed
+
+IMPORTANT: Update these values in your scripts:
+  configure-cloudfront-cache.ps1
+  invalidate-cloudfront-cache.ps1
+
+CloudFront URL for code:
+https://d183hg75gdabnr.cloudfront.net

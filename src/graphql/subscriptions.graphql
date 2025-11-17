@@ -1,0 +1,289 @@
+# this is an auto generated file. This will be overwritten
+
+subscription OnCreatePerfilUsuario(
+  $filter: ModelSubscriptionPerfilUsuarioFilterInput
+) {
+  onCreatePerfilUsuario(filter: $filter) {
+    userId
+    nickname
+    fullName
+    description
+    totalScore
+    nivel
+    tipo
+    ubicacion {
+      ciudad
+      provincia
+      pais
+      __typename
+    }
+    rankingPreference
+    createdAt
+    photoUrl
+    email
+    followersCount
+    followingCount
+    isOnline
+    lastSeen
+    updatedAt
+    followers {
+      nextToken
+      __typename
+    }
+    following {
+      nextToken
+      __typename
+    }
+    __typename
+  }
+}
+
+subscription OnUpdatePerfilUsuario(
+  $filter: ModelSubscriptionPerfilUsuarioFilterInput
+) {
+  onUpdatePerfilUsuario(filter: $filter) {
+    userId
+    nickname
+    fullName
+    description
+    totalScore
+    nivel
+    tipo
+    ubicacion {
+      ciudad
+      provincia
+      pais
+      __typename
+    }
+    rankingPreference
+    createdAt
+    photoUrl
+    email
+    followersCount
+    followingCount
+    isOnline
+    lastSeen
+    updatedAt
+    followers {
+      nextToken
+      __typename
+    }
+    following {
+      nextToken
+      __typename
+    }
+    __typename
+  }
+}
+
+subscription OnDeletePerfilUsuario(
+  $filter: ModelSubscriptionPerfilUsuarioFilterInput
+) {
+  onDeletePerfilUsuario(filter: $filter) {
+    userId
+    nickname
+    fullName
+    description
+    totalScore
+    nivel
+    tipo
+    ubicacion {
+      ciudad
+      provincia
+      pais
+      __typename
+    }
+    rankingPreference
+    createdAt
+    photoUrl
+    email
+    followersCount
+    followingCount
+    isOnline
+    lastSeen
+    updatedAt
+    followers {
+      nextToken
+      __typename
+    }
+    following {
+      nextToken
+      __typename
+    }
+    __typename
+  }
+}
+
+subscription OnCreateSocialRelation(
+  $filter: ModelSubscriptionSocialRelationFilterInput
+) {
+  onCreateSocialRelation(filter: $filter) {
+    id
+    userId
+    targetUserId
+    relationType
+    createdAt
+    status
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnUpdateSocialRelation(
+  $filter: ModelSubscriptionSocialRelationFilterInput
+) {
+  onUpdateSocialRelation(filter: $filter) {
+    id
+    userId
+    targetUserId
+    relationType
+    createdAt
+    status
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnDeleteSocialRelation(
+  $filter: ModelSubscriptionSocialRelationFilterInput
+) {
+  onDeleteSocialRelation(filter: $filter) {
+    id
+    userId
+    targetUserId
+    relationType
+    createdAt
+    status
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnCreateChat($filter: ModelSubscriptionChatFilterInput) {
+  onCreateChat(filter: $filter) {
+    id
+    participants
+    lastMessage
+    lastMessageTime
+    unreadCount
+    messages {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnUpdateChat($filter: ModelSubscriptionChatFilterInput) {
+  onUpdateChat(filter: $filter) {
+    id
+    participants
+    lastMessage
+    lastMessageTime
+    unreadCount
+    messages {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnDeleteChat($filter: ModelSubscriptionChatFilterInput) {
+  onDeleteChat(filter: $filter) {
+    id
+    participants
+    lastMessage
+    lastMessageTime
+    unreadCount
+    messages {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnCreateMessage($filter: ModelSubscriptionMessageFilterInput) {
+  onCreateMessage(filter: $filter) {
+    id
+    chatId
+    chat {
+      id
+      participants
+      lastMessage
+      lastMessageTime
+      unreadCount
+      createdAt
+      updatedAt
+      __typename
+    }
+    senderId
+    senderName
+    content
+    messageType
+    status
+    readBy
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnUpdateMessage($filter: ModelSubscriptionMessageFilterInput) {
+  onUpdateMessage(filter: $filter) {
+    id
+    chatId
+    chat {
+      id
+      participants
+      lastMessage
+      lastMessageTime
+      unreadCount
+      createdAt
+      updatedAt
+      __typename
+    }
+    senderId
+    senderName
+    content
+    messageType
+    status
+    readBy
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnDeleteMessage($filter: ModelSubscriptionMessageFilterInput) {
+  onDeleteMessage(filter: $filter) {
+    id
+    chatId
+    chat {
+      id
+      participants
+      lastMessage
+      lastMessageTime
+      unreadCount
+      createdAt
+      updatedAt
+      __typename
+    }
+    senderId
+    senderName
+    content
+    messageType
+    status
+    readBy
+    createdAt
+    updatedAt
+    __typename
+  }
+}
