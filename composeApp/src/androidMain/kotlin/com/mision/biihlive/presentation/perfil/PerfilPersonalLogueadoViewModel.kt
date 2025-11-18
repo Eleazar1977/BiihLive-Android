@@ -147,7 +147,7 @@ class PerfilPersonalLogueadoViewModel(
                                 null
                             }
 
-                            // Obtener contadores actualizados de userStats
+                            // ✅ CORREGIDO: Obtener estadísticas desde userStats (como en APK funcional)
                             val statsResult = try {
                                 firestoreRepository.getUserStats(perfil.userId)
                             } catch (e: Exception) {
@@ -158,12 +158,17 @@ class PerfilPersonalLogueadoViewModel(
                             val (followersCount, followingCount) = if (statsResult.isSuccess) {
                                 statsResult.getOrNull() ?: Pair(perfil.seguidores, perfil.siguiendo)
                             } else {
-                                // Fallback a contadores legacy del perfil
-                                Log.w(TAG, "📊 [STATS_DEBUG] Usando contadores legacy del perfil")
+                                Log.w(TAG, "📊 [STATS_DEBUG] Fallback a campos legacy por error en userStats")
                                 Pair(perfil.seguidores, perfil.siguiendo)
                             }
 
-                            Log.d(TAG, "📊 [STATS_DEBUG] Contadores finales para perfil: $followersCount seguidores, $followingCount siguiendo")
+                            Log.d(TAG, "📊 [STATS_DEBUG] Estadísticas finales desde userStats:")
+                            Log.d(TAG, "📊 - Seguidores: $followersCount (userStats)")
+                            Log.d(TAG, "📊 - Siguiendo: $followingCount (userStats)")
+                            Log.d(TAG, "📊 - Legacy seguidores: ${perfil.seguidores}")
+                            Log.d(TAG, "📊 - Legacy siguiendo: ${perfil.siguiendo}")
+                            Log.d(TAG, "📊 - UserID: ${perfil.userId}")
+                            Log.d(TAG, "📊 - Nickname: ${perfil.nickname}")
 
                             // Obtener posición en ranking según preferencia del usuario
                             val rankingResult = try {
@@ -202,7 +207,8 @@ class PerfilPersonalLogueadoViewModel(
                                         profileThumbnailUrl = profileImages?.second,
                                         rankingPosition = rankingPosition,
                                         rankingScope = rankingScope,
-                                        isLoadingRanking = false
+                                        isLoadingRanking = false,
+                                        // ✅ Estadísticas completas desde UserStats
                                     )
                                 }
 

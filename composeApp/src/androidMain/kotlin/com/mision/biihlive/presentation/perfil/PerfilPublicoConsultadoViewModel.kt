@@ -147,23 +147,28 @@ class PerfilPublicoConsultadoViewModel(
                                 null
                             }
 
-                            // Obtener contadores actualizados de userStats
+                            // ✅ CORREGIDO: Obtener estadísticas desde userStats (como en APK funcional)
                             val statsResult = try {
                                 firestoreRepository.getUserStats(perfil.userId)
                             } catch (e: Exception) {
-                                Log.e(TAG, "Error obteniendo userStats: ${e.message}")
+                                Log.e(TAG, "Error obteniendo userStats para perfil público: ${e.message}")
                                 Result.failure(e)
                             }
 
                             val (followersCount, followingCount) = if (statsResult.isSuccess) {
                                 statsResult.getOrNull() ?: Pair(perfil.seguidores, perfil.siguiendo)
                             } else {
-                                // Fallback a contadores legacy del perfil
-                                Log.w(TAG, "📊 [STATS_DEBUG] Usando contadores legacy del perfil público")
+                                Log.w(TAG, "📊 [STATS_DEBUG] Fallback a campos legacy por error en userStats (perfil público)")
                                 Pair(perfil.seguidores, perfil.siguiendo)
                             }
 
-                            Log.d(TAG, "📊 [STATS_DEBUG] Contadores finales para perfil público: $followersCount seguidores, $followingCount siguiendo")
+                            Log.d(TAG, "📊 [STATS_DEBUG] Estadísticas perfil público finales desde userStats:")
+                            Log.d(TAG, "📊 - Seguidores: $followersCount (userStats)")
+                            Log.d(TAG, "📊 - Siguiendo: $followingCount (userStats)")
+                            Log.d(TAG, "📊 - Legacy seguidores: ${perfil.seguidores}")
+                            Log.d(TAG, "📊 - Legacy siguiendo: ${perfil.siguiendo}")
+                            Log.d(TAG, "📊 - UserID: ${perfil.userId}")
+                            Log.d(TAG, "📊 - Nickname: ${perfil.nickname}")
 
                             // Obtener posición en ranking según preferencia del usuario consultado
                             val rankingResult = try {

@@ -10,6 +10,7 @@ import com.mision.biihlive.domain.perfil.model.Ubicacion
 import com.mision.biihlive.domain.perfil.model.SubscriptionConfig
 import com.mision.biihlive.domain.perfil.model.SubscriptionOption
 import com.mision.biihlive.domain.perfil.model.PatrocinioConfig
+import com.mision.biihlive.domain.perfil.model.UserStats
 import com.mision.biihlive.domain.users.model.UserPreview
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.flow.Flow
@@ -698,10 +699,6 @@ class FirestoreRepository {
                 val followerStatsRef = firestore.collection("userStats").document(followerId)
                 val followedStatsRef = firestore.collection("userStats").document(followedId)
 
-                // Referencias para contadores en users (mantener compatibilidad)
-                val followerUserRef = firestore.collection(USERS_COLLECTION).document(followerId)
-                val followedUserRef = firestore.collection(USERS_COLLECTION).document(followedId)
-
                 // Crear relaciones en subcolecciones
                 transaction.set(followerFollowingRef, mapOf(
                     "timestamp" to com.google.firebase.firestore.FieldValue.serverTimestamp(),
@@ -720,9 +717,7 @@ class FirestoreRepository {
                 transaction.update(followedStatsRef,
                     "followersCount", com.google.firebase.firestore.FieldValue.increment(1))
 
-                // Mantener contadores legacy en users
-                transaction.update(followerUserRef, "siguiendo", com.google.firebase.firestore.FieldValue.increment(1))
-                transaction.update(followedUserRef, "seguidores", com.google.firebase.firestore.FieldValue.increment(1))
+                // Contadores legacy eliminados - solo usar userStats collection
 
                 null
             }.await()
@@ -778,9 +773,7 @@ class FirestoreRepository {
                 transaction.update(followedStatsRef,
                     "followersCount", com.google.firebase.firestore.FieldValue.increment(-1))
 
-                // Mantener contadores legacy en users
-                transaction.update(followerUserRef, "siguiendo", com.google.firebase.firestore.FieldValue.increment(-1))
-                transaction.update(followedUserRef, "seguidores", com.google.firebase.firestore.FieldValue.increment(-1))
+                // Contadores legacy eliminados - solo usar userStats collection
 
                 null
             }.await()
@@ -1158,50 +1151,6 @@ class FirestoreRepository {
     }
 
 
-    /**
-     * Obtener contadores de userStats (seguidores/siguiendo) desde la estructura escalable
-     * ESTRUCTURA: userStats/{userId} - followersCount, followingCount
-     */
-    suspend fun getUserStats(userId: String): Result<Pair<Int, Int>> {
-        return try {
-            Log.d(TAG, "📊 [STATS_DEBUG] Obteniendo userStats para userId: $userId")
-
-            val userStatsDoc = firestore.collection("userStats")
-                .document(userId)
-                .get()
-                .await()
-
-            if (userStatsDoc.exists()) {
-                val followersCount = userStatsDoc.getLong("followersCount")?.toInt() ?: 0
-                val followingCount = userStatsDoc.getLong("followingCount")?.toInt() ?: 0
-
-                Log.d(TAG, "📊 [STATS_DEBUG] ✅ UserStats encontrados: $followersCount seguidores, $followingCount siguiendo")
-                Result.success(Pair(followersCount, followingCount))
-            } else {
-                Log.d(TAG, "📊 [STATS_DEBUG] ⚠️ UserStats no encontrados, usando contadores legacy del perfil")
-
-                // Fallback a contadores legacy en users collection
-                val userDoc = firestore.collection(USERS_COLLECTION)
-                    .document(userId)
-                    .get()
-                    .await()
-
-                if (userDoc.exists()) {
-                    val seguidores = userDoc.getLong("seguidores")?.toInt() ?: 0
-                    val siguiendo = userDoc.getLong("siguiendo")?.toInt() ?: 0
-
-                    Log.d(TAG, "📊 [STATS_DEBUG] ✅ Contadores legacy: $seguidores seguidores, $siguiendo siguiendo")
-                    Result.success(Pair(seguidores, siguiendo))
-                } else {
-                    Log.w(TAG, "📊 [STATS_DEBUG] ❌ Usuario no encontrado")
-                    Result.success(Pair(0, 0))
-                }
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "📊 [STATS_DEBUG] ❌ Error obteniendo userStats", e)
-            Result.failure(e)
-        }
-    }
 
     /**
      * Helper function to build location string from individual components
@@ -2304,6 +2253,30 @@ class FirestoreRepository {
             Pair(0, "Mundial")
         }
     }
+
+    /**
+     * Obtener contadores de seguimiento desde userStats collection
+     * Retorna Pair<followersCount, followingCount> como en APK funcional
+     */
+    suspend fun getUserStats(userId: String): Result<Pair<Int, Int>> {
+        return try {
+            val document = firestore.collection("userStats")
+                .document(userId)
+                .get()
+                .await()
+
+            if (document.exists()) {
+                val followersCount = document.getLong("followersCount")?.toInt() ?: 0
+                val followingCount = document.getLong("followingCount")?.toInt() ?: 0
+                Result.success(Pair(followersCount, followingCount))
+            } else {
+                Result.success(Pair(0, 0))
+            }
+
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }
 
 /**
@@ -2327,8 +2300,6 @@ private fun com.google.firebase.firestore.DocumentSnapshot.toPerfilUsuario(): Pe
             createdAt = getLong("createdAt") ?: 0L,
             photoUrl = getString("photoUrl") ?: "",
             email = getString("email") ?: "",
-            seguidores = getLong("seguidores")?.toInt() ?: 0,
-            siguiendo = getLong("siguiendo")?.toInt() ?: 0,
             isVerified = getBoolean("isVerified") ?: false,
             donacion = getBoolean("donacion") ?: false, // Mapear campo donacion
             mostrarEstado = getBoolean("mostrarEstado") ?: true, // Control de privacidad estado en línea
@@ -2391,120 +2362,77 @@ private fun com.google.firebase.firestore.DocumentSnapshot.getUbicacionFromDocum
             privacyLevel = "city"
         )
     }
-
 }
 
 /**
  * Función para extraer configuración de suscripciones de un DocumentSnapshot de Firestore
+ * Solo retorna datos reales, sin hardcode ni valores por defecto
  */
 private fun com.google.firebase.firestore.DocumentSnapshot.getSubscriptionConfigFromDocument(): SubscriptionConfig {
     return try {
-        Log.d("FirestoreRepository", "🔍 [SUBSCRIPTION_DEBUG] Parseando subscriptionConfig APK estructura para userId: $id")
+        Log.d("FirestoreRepository", "🔍 [SUBSCRIPTION_DEBUG] Parseando subscriptionConfig para userId: $id")
 
-        // Debug: Mostrar todas las claves disponibles en el documento
-        val allData = data
-        Log.d("FirestoreRepository", "🔍 [SUBSCRIPTION_DEBUG] Todas las claves del documento: ${allData?.keys}")
-
-        // Debug: Verificar si hay un objeto subscriptionConfig anidado
+        // Verificar si hay configuración real de suscripciones
         val subscriptionConfigObject = get("subscriptionConfig")
-        Log.d("FirestoreRepository", "🔍 [SUBSCRIPTION_DEBUG] Objeto subscriptionConfig: $subscriptionConfigObject (type: ${subscriptionConfigObject?.javaClass?.simpleName})")
-
-        // Variables para estructura APK
-        var isEnabled = false
-        var currency = "€"
-        var description = "¡Únete a mi mundo en Biihlive! Suscríbete y no te pierdas ninguna de mis transmisiones en vivo."
-        var options: List<SubscriptionOption> = emptyList()
 
         if (subscriptionConfigObject is Map<*, *>) {
-            Log.d("FirestoreRepository", "🔍 [SUBSCRIPTION_DEBUG] Leyendo desde objeto anidado subscriptionConfig")
             val configMap = subscriptionConfigObject as Map<String, Any>
-            Log.d("FirestoreRepository", "🔍 [SUBSCRIPTION_DEBUG] Claves en configMap: ${configMap.keys}")
 
-            currency = configMap["currency"] as? String ?: "€"
-            description = configMap["description"] as? String ?: "¡Únete a mi mundo en Biihlive! Suscríbete y no te pierdas ninguna de mis transmisiones en vivo."
+            // Solo procesar si tiene datos reales
+            val isEnabled = configMap["isEnabled"] as? Boolean ?: false
+            val currency = configMap["currency"] as? String
+            val description = configMap["description"] as? String
 
-            val isEnabledRaw = configMap["isEnabled"]
-            Log.d("FirestoreRepository", "🔍 [SUBSCRIPTION_DEBUG] Raw isEnabled desde map: $isEnabledRaw (type: ${isEnabledRaw?.javaClass?.simpleName})")
+            // Solo crear opciones si existen datos reales
+            val options = (configMap["options"] as? List<*>)?.mapNotNull { optionData ->
+                if (optionData is Map<*, *>) {
+                    val optionMap = optionData as Map<String, Any>
 
-            isEnabled = when (isEnabledRaw) {
-                is Boolean -> isEnabledRaw
-                is String -> isEnabledRaw.lowercase() == "true"
-                is Long -> isEnabledRaw != 0L
-                is Double -> isEnabledRaw != 0.0
-                else -> false
-            }
+                    // Solo crear opción si tiene precio y duración válidos
+                    val price = optionMap["price"] as? String
+                    val duration = optionMap["duration"] as? String
 
-            // Leer array de opciones según estructura APK
-            val optionsRaw = configMap["options"]
-            options = when (optionsRaw) {
-                is List<*> -> {
-                    optionsRaw.mapNotNull { optionData ->
-                        if (optionData is Map<*, *>) {
-                            val optionMap = optionData as Map<String, Any>
-                            try {
-                                SubscriptionOption(
-                                    id = optionMap["id"] as? String ?: java.util.UUID.randomUUID().toString(),
-                                    price = optionMap["price"] as? String ?: "9.99",
-                                    duration = optionMap["duration"] as? String ?: "1 mes",
-                                    durationInDays = (optionMap["durationInDays"] as? Number)?.toInt() ?: 30,
-                                    displayName = optionMap["displayName"] as? String ?: "Plan Mensual",
-                                    isActive = optionMap["isActive"] as? Boolean ?: true
-                                )
-                            } catch (e: Exception) {
-                                Log.w("FirestoreRepository", "Error parseando opción: $optionData", e)
-                                null
-                            }
-                        } else null
-                    }
-                }
-                else -> {
-                    // Si no hay opciones en estructura APK, crear una por defecto a partir de campos legacy
-                    val legacyPrice = configMap["price"] as? String ?: "9.99"
-                    val legacyDuration = configMap["duration"] as? String ?: "1 mes"
-                    listOf(
+                    if (!price.isNullOrBlank() && !duration.isNullOrBlank()) {
                         SubscriptionOption(
-                            price = legacyPrice,
-                            duration = legacyDuration,
-                            durationInDays = when (legacyDuration) {
-                                "1 mes" -> 30
-                                "3 meses" -> 90
-                                "anual" -> 365
-                                else -> 30
-                            },
-                            displayName = "Plan ${legacyDuration.replaceFirstChar { it.uppercase() }}"
+                            id = optionMap["id"] as? String ?: java.util.UUID.randomUUID().toString(),
+                            price = price,
+                            duration = duration,
+                            durationInDays = (optionMap["durationInDays"] as? Number)?.toInt() ?: 30,
+                            displayName = optionMap["displayName"] as? String ?: duration,
+                            isActive = optionMap["isActive"] as? Boolean ?: true
                         )
-                    )
-                }
-            }
+                    } else null
+                } else null
+            } ?: emptyList()
+
+            Log.d("FirestoreRepository", "✅ [SUBSCRIPTION_DEBUG] Config encontrada: isEnabled=$isEnabled, opciones=${options.size}")
+
+            SubscriptionConfig(
+                isEnabled = isEnabled,
+                currency = currency ?: "€",
+                description = description ?: "",
+                options = options
+            )
         } else {
-            // Fallback para estructura legacy o sin subscriptionConfig
-            Log.d("FirestoreRepository", "🔍 [SUBSCRIPTION_DEBUG] Usando fallback a configuración por defecto")
-            options = listOf(
-                SubscriptionOption(
-                    price = "9.99",
-                    duration = "1 mes",
-                    durationInDays = 30,
-                    displayName = "Plan Mensual"
-                )
+            Log.d("FirestoreRepository", "ℹ️ [SUBSCRIPTION_DEBUG] Sin configuración de suscripciones")
+            // Sin datos = configuración vacía/deshabilitada
+            SubscriptionConfig(
+                isEnabled = false,
+                currency = "€",
+                description = "",
+                options = emptyList()
             )
         }
 
-        Log.d("FirestoreRepository", "✅ [SUBSCRIPTION_DEBUG] Valores finales APK: isEnabled=$isEnabled, currency=$currency, options=${options.size}")
-
-        val config = SubscriptionConfig(
-            isEnabled = isEnabled,
-            currency = currency,
-            description = description,
-            options = options
-        )
-
-        Log.d("FirestoreRepository", "🔍 [SUBSCRIPTION_DEBUG] Config final: $config")
-        return config
-
     } catch (e: Exception) {
-        Log.e("FirestoreRepository", "❌ [SUBSCRIPTION_DEBUG] Error parseando configuración de suscripción", e)
-        // Configuración por defecto si hay error
-        return SubscriptionConfig()
+        Log.e("FirestoreRepository", "❌ [SUBSCRIPTION_DEBUG] Error parseando configuración", e)
+        // Error = configuración vacía/deshabilitada
+        return SubscriptionConfig(
+            isEnabled = false,
+            currency = "€",
+            description = "",
+            options = emptyList()
+        )
     }
 }
 
@@ -2513,86 +2441,68 @@ private fun com.google.firebase.firestore.DocumentSnapshot.getSubscriptionConfig
  */
 private fun com.google.firebase.firestore.DocumentSnapshot.getPatrocinioConfigFromDocument(): PatrocinioConfig {
     return try {
-        Log.d("FirestoreRepository", "🔍 [PATROCINIO_DEBUG] Parseando patrocinioConfig APK estructura para userId: $id")
+        Log.d("FirestoreRepository", "🔍 [PATROCINIO_DEBUG] Parseando patrocinioConfig para userId: $id")
 
+        // Verificar si hay configuración real de patrocinios
         val patrocinioConfigObject = get("patrocinioConfig")
-        Log.d("FirestoreRepository", "🔍 [PATROCINIO_DEBUG] Objeto patrocinioConfig: $patrocinioConfigObject")
 
         if (patrocinioConfigObject is Map<*, *>) {
             val configMap = patrocinioConfigObject as Map<String, Any>
-            Log.d("FirestoreRepository", "🔍 [PATROCINIO_DEBUG] Claves en configMap: ${configMap.keys}")
 
-            // Leer campos de nivel superior según estructura APK
-            val isEnabled = when (val isEnabledRaw = configMap["isEnabled"]) {
-                is Boolean -> isEnabledRaw
-                is String -> isEnabledRaw.lowercase() == "true"
-                else -> false
-            }
-            val currency = configMap["currency"] as? String ?: "€"
-            val description = configMap["description"] as? String ?:
-                "¡Patrocina mi contenido en Biihlive! Ayúdame a seguir creando y forma parte de mi comunidad exclusiva."
+            // Solo procesar si tiene datos reales
+            val isEnabled = configMap["isEnabled"] as? Boolean ?: false
+            val currency = configMap["currency"] as? String
+            val description = configMap["description"] as? String
 
-            // Leer array de opciones
-            val optionsRaw = configMap["options"]
-            val options = when (optionsRaw) {
-                is List<*> -> {
-                    optionsRaw.mapNotNull { optionData ->
-                        if (optionData is Map<*, *>) {
-                            val optionMap = optionData as Map<String, Any>
-                            try {
-                                SubscriptionOption(
-                                    id = optionMap["id"] as? String ?: java.util.UUID.randomUUID().toString(),
-                                    price = optionMap["price"] as? String ?: "19.99",
-                                    duration = optionMap["duration"] as? String ?: "1 mes",
-                                    durationInDays = (optionMap["durationInDays"] as? Number)?.toInt() ?: 30,
-                                    displayName = optionMap["displayName"] as? String ?: "Plan Patrocinio Mensual",
-                                    isActive = optionMap["isActive"] as? Boolean ?: true
-                                )
-                            } catch (e: Exception) {
-                                Log.w("FirestoreRepository", "Error parseando opción patrocinio: $optionData", e)
-                                null
-                            }
-                        } else null
-                    }
-                }
-                else -> {
-                    // Si no hay opciones en estructura APK, crear una por defecto a partir de campos legacy
-                    val legacyPrice = configMap["price"] as? String ?: "19.99"
-                    val legacyDuration = configMap["duration"] as? String ?: "1 mes"
-                    listOf(
+            // Solo crear opciones si existen datos reales
+            val options = (configMap["options"] as? List<*>)?.mapNotNull { optionData ->
+                if (optionData is Map<*, *>) {
+                    val optionMap = optionData as Map<String, Any>
+
+                    // Solo crear opción si tiene precio y duración válidos
+                    val price = optionMap["price"] as? String
+                    val duration = optionMap["duration"] as? String
+
+                    if (!price.isNullOrBlank() && !duration.isNullOrBlank()) {
                         SubscriptionOption(
-                            price = legacyPrice,
-                            duration = legacyDuration,
-                            durationInDays = when (legacyDuration) {
-                                "1 mes" -> 30
-                                "3 meses" -> 90
-                                "anual" -> 365
-                                else -> 30
-                            },
-                            displayName = "Plan Patrocinio ${legacyDuration.replaceFirstChar { it.uppercase() }}"
+                            id = optionMap["id"] as? String ?: java.util.UUID.randomUUID().toString(),
+                            price = price,
+                            duration = duration,
+                            durationInDays = (optionMap["durationInDays"] as? Number)?.toInt() ?: 30,
+                            displayName = optionMap["displayName"] as? String ?: duration,
+                            isActive = optionMap["isActive"] as? Boolean ?: true
                         )
-                    )
-                }
-            }
+                    } else null
+                } else null
+            } ?: emptyList()
 
-            val config = PatrocinioConfig(
+            Log.d("FirestoreRepository", "✅ [PATROCINIO_DEBUG] Config encontrada: isEnabled=$isEnabled, opciones=${options.size}")
+
+            PatrocinioConfig(
                 isEnabled = isEnabled,
-                currency = currency,
-                description = description,
+                currency = currency ?: "€",
+                description = description ?: "",
                 options = options
             )
-
-            Log.d("FirestoreRepository", "🔍 [PATROCINIO_DEBUG] Config APK final: isEnabled=$isEnabled, options=${options.size}")
-            return config
-
         } else {
-            // Fallback para estructura legacy o sin patrocinioConfig
-            Log.d("FirestoreRepository", "🔍 [PATROCINIO_DEBUG] Usando fallback a configuración por defecto")
-            return PatrocinioConfig()
+            Log.d("FirestoreRepository", "ℹ️ [PATROCINIO_DEBUG] Sin configuración de patrocinios")
+            // Sin datos = configuración vacía/deshabilitada
+            PatrocinioConfig(
+                isEnabled = false,
+                currency = "€",
+                description = "",
+                options = emptyList()
+            )
         }
 
     } catch (e: Exception) {
-        Log.e("FirestoreRepository", "❌ [PATROCINIO_DEBUG] Error parseando configuración APK", e)
-        return PatrocinioConfig()
+        Log.e("FirestoreRepository", "❌ [PATROCINIO_DEBUG] Error parseando configuración", e)
+        // Error = configuración vacía/deshabilitada
+        return PatrocinioConfig(
+            isEnabled = false,
+            currency = "€",
+            description = "",
+            options = emptyList()
+        )
     }
 }

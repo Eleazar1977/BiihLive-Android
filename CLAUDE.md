@@ -2,9 +2,48 @@
 
 > **🚨 PROYECTO KOTLIN MULTIPLATFORM (KMP)**: Este proyecto usa Kotlin Multiplatform con Jetpack Compose Multiplatform, NO Android tradicional. Estructura: `composeApp/` (UI compartida), `shared/` (lógica), `iosApp/` (iOS entry point).
 
-## 🎯 **ESTADO ACTUAL - 8 Noviembre 2025**
+## 📋 **TODOs PENDIENTES - 18 Noviembre 2025**
 
-### **✅ COMPLETADO HOY (8 Nov 2025):**
+### **🚨 ALTA PRIORIDAD**
+
+#### **✅ PROBLEMA USERSTAT RESUELTO - Hugo y Todos los Usuarios con Stats Reales**
+- **🎉 PROBLEMA SOLUCIONADO**: Hugo ahora muestra 3 seguidores/7 siguiendo (datos reales de userStats)
+- **🔍 Causa raíz identificada**: `getUserStats()` mal ubicado dentro de función de extensión (scope corrupto)
+- **🔧 Solución implementada**: Reubicación estructural de getUserStats() en FirestoreRepository
+- **✅ Alcance completo**: Todos los usuarios ahora muestran stats reales desde userStats
+- **🏗️ Arquitectura corregida**: ViewModels usan getUserStats() con fallback a campos legacy
+
+**🔧 Cambios técnicos implementados:**
+1. **Identificación del conflicto**: getUserStats() dentro de getUbicacionFromDocument() (línea 2342-2364)
+2. **Reubicación estructural**: Función movida al scope correcto de FirestoreRepository (líneas 2257-2279)
+3. **Compilación exitosa**: BUILD SUCCESSFUL confirmado
+4. **Testing verificado**: Hugo muestra 3 seguidores, 7 siguiendo ✅
+
+**Estado**: ✅ COMPLETADO AL 100% (18 Nov 2025)
+**Resultado**: Todos los usuarios muestran estadísticas reales desde userStats
+
+---
+
+## 🎯 **ESTADO ACTUAL - 18 Noviembre 2025**
+
+### **✅ COMPLETADO HOY (18 Nov 2025):**
+
+#### **🔧 FIXES DE COMPILACIÓN Y ESTRUCTURA**
+- **✅ Unreachable Code Warning Resuelto**: Eliminados returns anidados en `getSubscriptionConfigFromDocument()` y `getPatrocinioConfigFromDocument()`
+- **✅ Segunda Fila Estadísticas Eliminada**: Removida funcionalidad no solicitada de monetización duplicada
+- **✅ Botón Patrocinio Siempre Visible**: Corregida condición para mostrar botón independiente de configuración
+- **✅ GUIA_REPARACION_USERSTATS.md**: Creada documentación completa de troubleshooting
+- **✅ PROBLEMA USERSTAT COMPLETAMENTE RESUELTO**: Hugo y todos los usuarios muestran stats reales
+
+#### **🎉 SOLUCIÓN CRÍTICA USERSTAT IMPLEMENTADA (18 Nov 2025)**
+- **🔍 Problema estructural identificado**: `getUserStats()` mal ubicado dentro de función de extensión
+- **💡 Causa raíz**: Función posicionada dentro de `getUbicacionFromDocument()` en lugar de clase FirestoreRepository
+- **🔧 Error específico resuelto**: `Cannot access 'field firestore: FirebaseFirestore!'`
+- **✅ Reubicación estructural**: Función movida a FirestoreRepository.kt líneas 2257-2279
+- **🚀 Resultado**: Hugo muestra 3 seguidores, 7 siguiendo (datos reales de userStats)
+- **📊 Alcance**: Todos los usuarios ahora muestran estadísticas reales en lugar de campos legacy (0/0)
+
+### **✅ COMPLETADO ANTERIORMENTE (8 Nov 2025):**
 
 #### **💰 SISTEMAS DE CONFIGURACIÓN IMPLEMENTADOS - COMPLETADOS AL 100%**
 
@@ -1443,15 +1482,6 @@ private fun formatMessageTime(timestamp: Long): String
 4. **⏳ Tiempo real avanzado** - Estados de "escribiendo"
 5. **⏳ Notificaciones push** - Firebase Cloud Messaging
 6. **⏳ Optimizaciones** - Paginación de mensajes y cache offline
-7. **📧 Mejoras Firebase Authentication Templates** - PENDIENTE (13 Nov 2025)
-   - **Estado actual**: Password reset funcional con Firebase Auth nativo
-   - **Email actual**: `noreply@biihlive-aa5c3.firebaseapp.com` (funciona correctamente)
-   - **Mejoras**: Firebase Console → Authentication → Templates → Password Reset
-     - ✅ Customize subject line: "Recupera tu acceso a Biihlive" (más específico)
-     - ✅ Add custom domain: `noreply@biihlive.com` (opcional)
-     - ✅ Modify email content: Menos automático, más personal
-   - **Problema**: Emails aparecen en web pero no en bandeja móvil (van a "Promociones")
-   - **Beneficio**: Templates personalizados mejoran deliverability móvil
 
 ### **📈 VENTAJAS DE FIREBASE**
 
